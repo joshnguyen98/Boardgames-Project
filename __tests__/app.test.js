@@ -26,3 +26,30 @@ describe("GET /api/categories", () => {
         })
     })
 })
+
+describe("GET /api/reviews", () => {
+    test("200: returns an array of objects, including comment_count and sorted by descending order", () => {
+        return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(( { body } ) => {
+            const reviews = body.reviews
+            expect(reviews).toBeInstanceOf(Array)
+            expect(reviews).toHaveLength(13)
+            expect(reviews).toBeSorted('created_at', { descending: true })
+            reviews.forEach((review) => {
+                expect(review).toEqual(expect.objectContaining({
+                    owner: expect.any(String),
+                    title: expect.any(String),
+                    review_id: expect.any(Number),
+                    category: expect.any(String),
+                    review_img_url: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    designer: expect.any(String),
+                    comment_count: expect.any(String)
+                }))
+            })
+        })
+    })
+})
