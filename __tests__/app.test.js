@@ -63,15 +63,15 @@ describe("GET /api/reviews/:review_id", () => {
             const review = body.review
             expect(review).toBeInstanceOf(Object)
             expect(review).toEqual(expect.objectContaining({
-                owner: expect.any(String),
-                title: expect.any(String),
-                review_id: expect.any(Number),
-                category: expect.any(String),
-                review_img_url: expect.any(String),
-                review_body: expect.any(String),
-                created_at: expect.any(String),
-                votes: expect.any(Number),
-                designer: expect.any(String)
+                owner: "philippaclaire9",
+                title: "Jenga",
+                review_id: 2,
+                category: "dexterity",
+                review_img_url: "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+                review_body: "Fiddly fun for all the family",
+                created_at: "2021-01-18T10:01:41.251Z",
+                votes: 5,
+                designer: "Leslie Scott"
             }))
         })
     })
