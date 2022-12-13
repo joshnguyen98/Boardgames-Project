@@ -53,3 +53,42 @@ describe("GET /api/reviews", () => {
         })
     })
 })
+
+describe("GET /api/reviews/:review_id", () => {
+    test("200: returns a review object with specified review_id", () => {
+        return request(app)
+        .get("/api/reviews/2")
+        .expect(200)
+        .then(( { body } ) => {
+            const review = body.review
+            expect(review).toBeInstanceOf(Object)
+            expect(review).toEqual(expect.objectContaining({
+                owner: expect.any(String),
+                title: expect.any(String),
+                review_id: expect.any(Number),
+                category: expect.any(String),
+                review_img_url: expect.any(String),
+                review_body: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                designer: expect.any(String)
+            }))
+        })
+    })
+    test("404: valid id but doesn't exist", () => {
+        return request(app)
+        .get("/api/reviews/999999")
+        .expect(404)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Not Found.")
+        })
+    })
+    test("400: id is not an integer", () => {
+        return request(app)
+        .get("/api/reviews/hello")
+        .expect(400)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Bad Request.")
+        })
+    })
+})

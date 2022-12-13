@@ -24,6 +24,19 @@ const selectReviews = () => {
     .then((result) => {
         return result.rows
     })
+};
+
+const selectReviewById = (id) => {
+    return db.query(`
+    SELECT * FROM reviews
+    WHERE review_id = $1;
+    `, [id])
+    .then((result) => {
+        if(result.rowCount === 0) {
+            return Promise.reject( {status: 404, msg: "Not Found."} )
+        }
+        return result.rows[0]
+    })
 }
 
-module.exports = { selectCategories, selectReviews };
+module.exports = { selectCategories, selectReviews, selectReviewById };
