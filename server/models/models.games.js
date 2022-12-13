@@ -37,6 +37,17 @@ const selectReviewById = (id) => {
         }
         return result.rows[0]
     })
-}
+};
 
-module.exports = { selectCategories, selectReviews, selectReviewById };
+const selectCommentsByReviewId = (id) => {
+    return db.query(`
+    SELECT * FROM comments
+    WHERE review_id = $1
+    ORDER BY created_at DESC;
+    `, [id])
+    .then((result) => {
+        return result.rows
+    })
+;}
+
+module.exports = { selectCategories, selectReviews, selectReviewById, selectCommentsByReviewId };

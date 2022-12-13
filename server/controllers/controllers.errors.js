@@ -13,6 +13,7 @@ const handlePsqlErrors = (err, req, res, next) => {
         next(err)
     }
 }
+
 const handleServerErrors = (err, req, res, next) => {
     res.status(500).send({ msg: "Internal Server Error."})
 }
