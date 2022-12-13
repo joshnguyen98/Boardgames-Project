@@ -22,7 +22,6 @@ const selectReviews = () => {
     ORDER BY created_at DESC
     ;`)
     .then((result) => {
-        console.log(result.rows)
         return result.rows
     })
 }
