@@ -1,7 +1,9 @@
 const db = require("../../db/connection");
 
 const selectCategories = () => {
-    return db.query(`SELECT * FROM categories`)
+    return db.query(`
+    SELECT * FROM categories;
+    `)
     .then((result) => {
         return result.rows
     })
@@ -50,4 +52,23 @@ const selectCommentsByReviewId = (id) => {
     })
 ;}
 
-module.exports = { selectCategories, selectReviews, selectReviewById, selectCommentsByReviewId };
+const insertCommentByReviewId = (id, comment) => {
+    return db.query(`
+    INSERT INTO comments
+    (review_id, author, body)
+    VALUES
+    ($1, $2, $3)
+    RETURNING *;
+    `, [id, comment.username, comment.body])
+    .then((result) => {
+        return result.rows[0]
+    })
+}
+
+module.exports = { 
+    selectCategories, 
+    selectReviews, 
+    selectReviewById, 
+    selectCommentsByReviewId,
+    insertCommentByReviewId
+};
