@@ -142,3 +142,89 @@ describe("GET /api/reviews/:review_id/comments", () => {
         })
     })
 })
+
+describe("POST /api/reviews/:review_id/comments", () => {
+    test("201: responds with the posted comment", () => {
+        const testComment = {
+            username: "mallionaire",
+            body: "I love this board game!"
+        }
+        return request(app)
+        .post("/api/reviews/2/comments")
+        .send(testComment)
+        .expect(201)
+        .then(( { body } ) => {
+            expect(body.comment).toEqual({
+                review_id: 2,
+                author: "mallionaire",
+                body: "I love this board game!",
+                votes: 0,
+                comment_id: 7,
+                created_at: expect.any(String)
+            })
+        })
+    })
+    test("400: Invalid ID type", () => {
+        const testComment = {
+            username: "mallionaire",
+            body: "I love this board game!"
+        }
+        return request(app)
+        .post("/api/reviews/hello/comments")
+        .send(testComment)
+        .expect(400)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Bad Request.")
+        })
+    })
+    test("404: ID doesn't exist", () => {
+        const testComment = {
+            username: "mallionaire",
+            body: "I love this board game!"
+        }
+        return request(app)
+        .post("/api/reviews/999999/comments")
+        .send(testComment)
+        .expect(404)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Not Found.")
+        })
+    })
+    test("404: Username doesn't exist in user database", () => {
+        const testComment = {
+            username: "Josh",
+            body: "I love this board game!"
+        }
+        return request(app)
+        .post("/api/reviews/2/comments")
+        .send(testComment)
+        .expect(404)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Username Doesn't Exist in the Database.")
+        })
+    })
+    test("400: Comment doesn't contain username", () => {
+        const testComment = {
+            body: "I love this board game!"
+        }
+        return request(app)
+        .post("/api/reviews/2/comments")
+        .send(testComment)
+        .expect(400)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Comment Missing Required Data.")
+        })
+    })
+    test("400: Comment doesn't contain body", () => {
+        const testComment = {
+            username: "mallionaire",
+        }
+        return request(app)
+        .post("/api/reviews/2/comments")
+        .send(testComment)
+        .expect(400)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Comment Missing Required Data.")
+        })
+    })
+})
