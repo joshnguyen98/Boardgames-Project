@@ -228,3 +228,80 @@ describe("POST /api/reviews/:review_id/comments", () => {
         })
     })
 })
+
+describe("PATCH /api/reviews/:review_id", () => {
+    test("200: increments review votes by newvote property and returns updated review", () => {
+        const reviewUpdate = { inc_votes: 1}
+        return request(app)
+        .patch("/api/reviews/2")
+        .send(reviewUpdate)
+        .expect(200)
+        .then(( { body } ) => {
+            const review = body.review
+            expect(review).toBeInstanceOf(Object)
+            expect(review).toEqual(expect.objectContaining({
+                owner: "philippaclaire9",
+                title: "Jenga",
+                review_id: 2,
+                category: "dexterity",
+                review_img_url: "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+                review_body: "Fiddly fun for all the family",
+                created_at: "2021-01-18T10:01:41.251Z",
+                votes: 6,
+                designer: "Leslie Scott"
+            }))
+        })
+    })
+    test("200: increments review votes by newvote property and returns updated review, with only votes updated", () => {
+        const reviewUpdate = { inc_votes: 1, owner: "josh"}
+        return request(app)
+        .patch("/api/reviews/2")
+        .send(reviewUpdate)
+        .expect(200)
+        .then(( { body } ) => {
+            const review = body.review
+            expect(review).toBeInstanceOf(Object)
+            expect(review).toEqual(expect.objectContaining({
+                owner: "philippaclaire9",
+                title: "Jenga",
+                review_id: 2,
+                category: "dexterity",
+                review_img_url: "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+                review_body: "Fiddly fun for all the family",
+                created_at: "2021-01-18T10:01:41.251Z",
+                votes: 6,
+                designer: "Leslie Scott"
+            }))
+        })
+    })
+    test("404: ID doesn't exist", () => {
+        const reviewUpdate = { inc_votes: 1}
+        return request(app)
+        .patch("/api/reviews/999999")
+        .send(reviewUpdate)
+        .expect(404)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Not Found.")
+        })
+    })
+    test("400: Invalid ID type", () => {
+        const reviewUpdate = { inc_votes: 1}
+        return request(app)
+        .patch("/api/reviews/hello")
+        .send(reviewUpdate)
+        .expect(400)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Bad Request.")
+        })
+    })
+    test("400: Increment is not a number", () => {
+        const reviewUpdate = { inc_votes: "hello"}
+        return request(app)
+        .patch("/api/reviews/2")
+        .send(reviewUpdate)
+        .expect(400)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Bad Request.")
+        })
+    })
+})

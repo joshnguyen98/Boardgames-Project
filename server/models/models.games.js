@@ -65,10 +65,24 @@ const insertCommentByReviewId = (id, comment) => {
     })
 }
 
+const updateReviewVotesById = (id, inc) => {
+    return db.query(`
+    UPDATE reviews
+    SET votes = votes + $1
+    WHERE review_id = $2
+    RETURNING *;
+    `, [inc, id])
+    .then((result) => {
+        console.log(result.rows)
+        return result.rows[0]
+    })
+}
+
 module.exports = { 
     selectCategories, 
     selectReviews, 
     selectReviewById, 
     selectCommentsByReviewId,
-    insertCommentByReviewId
+    insertCommentByReviewId,
+    updateReviewVotesById
 };
