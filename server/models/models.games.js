@@ -14,10 +14,6 @@ const selectReviews = (category, sort_by='created_at', order='desc') => {
     const validSortByQueries = ['title', 'designer', 'owner', 'review_img_url', 'category', 'created_at', 'votes', 'review_id']
     const validCategoryQueries = ['euro game', 'social deduction', 'dexterity', "children's games"]
 
-    console.log(sort_by, "<<< sortby")
-    console.log(order, "<<< order")
-    console.log(category, "<<< cate")
-
     if(!validSortByQueries.includes(sort_by) || !validOrderQueries.includes(order) ) {
         return Promise.reject({status: 400, msg: 'Bad Request.'});
     }
@@ -32,11 +28,14 @@ const selectReviews = (category, sort_by='created_at', order='desc') => {
         comments
     ON reviews.review_id = comments.review_id `
 
+    const queryArr = []
+
     if (category !== undefined) {
         if (!validCategoryQueries.includes(category)) {
             return Promise.reject({status: 400, msg: 'Bad Request.'})
         } else {
-            queryStr += ` WHERE category = '${category}' `
+            queryStr += ` WHERE category = $1 `
+            queryArr.push(category)
         }
     }
 
@@ -46,9 +45,8 @@ const selectReviews = (category, sort_by='created_at', order='desc') => {
     ORDER BY ${sort_by} ${order}
     ;`
 
-    return db.query(queryStr)
+    return db.query(queryStr, queryArr)
     .then((result) => {
-        console.log(result.rows)
         return result.rows
     })
 };

@@ -395,4 +395,12 @@ describe("GET /api/users (queries)", () => {
             expect(body.msg).toBe("Bad Request.")
         })
     })
+    test("200: returns an empty array for a valid category with no reviews", () => {
+        return request(app)
+        .get("/api/reviews?category=children's games")
+        .expect(200)
+        .then(({body: {reviews}}) => {
+            expect(reviews).toMatchObject([])
+        })
+    })
 })
