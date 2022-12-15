@@ -80,11 +80,21 @@ const updateReviewVotesById = (id, inc) => {
     })
 }
 
+const selectUsers = () => {
+    return db.query(`
+    SELECT * FROM users;
+    `)
+    .then((result) => {
+        return result.rows
+    })
+}
+
 module.exports = { 
     selectCategories, 
     selectReviews, 
     selectReviewById, 
     selectCommentsByReviewId,
     insertCommentByReviewId,
-    updateReviewVotesById
+    updateReviewVotesById,
+    selectUsers
 };
