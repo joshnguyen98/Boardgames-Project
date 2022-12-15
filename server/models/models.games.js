@@ -114,13 +114,27 @@ const updateReviewVotesById = (id, inc) => {
 
 const selectUsers = () => {
     return db.query(`
-    SELECT * FROM users;
-    `)
+    SELECT * FROM users
+    ;`)
     .then((result) => {
         return result.rows
     })
 }
 
+const removeCommentById = (id) => {
+    return db.query(`
+    DELETE FROM comments
+    WHERE 
+        comment_id = $1
+    RETURNING *
+    ;`, [id])
+    .then((result) => {
+        if (result.rowCount === 0) {
+            return Promise.reject({ status: 404, msg: 'Not Found.'})
+        }
+        return result.rows[0]
+    })
+}
 
 
 
@@ -132,4 +146,5 @@ module.exports = {
     insertCommentByReviewId,
     updateReviewVotesById,
     selectUsers,
+    removeCommentById
 };
