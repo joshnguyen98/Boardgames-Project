@@ -4,7 +4,8 @@ const {
     selectReviewById, 
     selectCommentsByReviewId,
     insertCommentByReviewId,
-    updateReviewVotesById
+    updateReviewVotesById,
+    selectUsers
 } = require("../models/models.games");
 
 const getCategories = (req, res, next) => {
@@ -77,6 +78,17 @@ const patchReviewVotesById = (req, res, next) => {
     })
 }
 
+const getUsers = (req, res, next) => {
+
+    selectUsers()
+    .then((users) => {
+        res.status(200).send({ users })
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
 
 module.exports = { 
     getCategories, 
@@ -84,5 +96,6 @@ module.exports = {
     getReviewById, 
     getCommentsByReviewId, 
     postCommentByReviewId,
-    patchReviewVotesById
+    patchReviewVotesById,
+    getUsers
 };

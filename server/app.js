@@ -6,7 +6,8 @@ const {
     getReviewById, 
     getCommentsByReviewId, 
     postCommentByReviewId, 
-    patchReviewVotesById 
+    patchReviewVotesById, 
+    getUsers
 } = require("./controllers/controllers.games");
 
 const app = express();
@@ -18,6 +19,7 @@ app.get("/api/reviews/:review_id", getReviewById);
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 app.post("/api/reviews/:review_id/comments", postCommentByReviewId);
 app.patch("/api/reviews/:review_id", patchReviewVotesById);
+app.get("/api/users", getUsers)
 
 app.use(handleCustomErrors);
 app.use(handlePsqlErrors);
