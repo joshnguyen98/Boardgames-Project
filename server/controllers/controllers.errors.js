@@ -10,16 +10,15 @@ const handlePsqlErrors = (err, req, res, next) => {
     if (err.code === "22P02") {
         res.status(400).send({ msg: "Bad Request." })
     } else if (err.code === "23503") {
-        res.status(404).send({ msg: "Username Doesn't Exist in the Database." })
+        res.status(404).send({ msg: "Not Found." })
     } else if (err.code === "23502") {
-        res.status(400).send({ msg: "Comment Missing Required Data." })
+        res.status(400).send({ msg: "Bad Request." })
     } else {
         next(err)
     }
 }
 
 const handleServerErrors = (err, req, res, next) => {
-    console.log(err.code)
     res.status(500).send({ msg: "Internal Server Error."})
 }
 

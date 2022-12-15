@@ -73,7 +73,9 @@ const updateReviewVotesById = (id, inc) => {
     RETURNING *;
     `, [inc, id])
     .then((result) => {
-        console.log(result.rows)
+        if(result.rowCount === 0) {
+            return Promise.reject( {status: 404, msg: "Not Found."} )
+        }
         return result.rows[0]
     })
 }

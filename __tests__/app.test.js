@@ -183,7 +183,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
             body: "I love this board game!"
         }
         return request(app)
-        .post("/api/reviews/999999/comments")
+        .post("/api/reviews/99/comments")
         .send(testComment)
         .expect(404)
         .then(( { body } ) => {
@@ -200,7 +200,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
         .send(testComment)
         .expect(404)
         .then(( { body } ) => {
-            expect(body.msg).toBe("Username Doesn't Exist in the Database.")
+            expect(body.msg).toBe("Not Found.")
         })
     })
     test("400: Comment doesn't contain username", () => {
@@ -212,7 +212,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
         .send(testComment)
         .expect(400)
         .then(( { body } ) => {
-            expect(body.msg).toBe("Comment Missing Required Data.")
+            expect(body.msg).toBe("Bad Request.")
         })
     })
     test("400: Comment doesn't contain body", () => {
@@ -224,7 +224,7 @@ describe("POST /api/reviews/:review_id/comments", () => {
         .send(testComment)
         .expect(400)
         .then(( { body } ) => {
-            expect(body.msg).toBe("Comment Missing Required Data.")
+            expect(body.msg).toBe("Bad Request.")
         })
     })
 })
@@ -238,7 +238,6 @@ describe("PATCH /api/reviews/:review_id", () => {
         .expect(200)
         .then(( { body } ) => {
             const review = body.review
-            expect(review).toBeInstanceOf(Object)
             expect(review).toEqual(expect.objectContaining({
                 owner: "philippaclaire9",
                 title: "Jenga",
@@ -260,7 +259,6 @@ describe("PATCH /api/reviews/:review_id", () => {
         .expect(200)
         .then(( { body } ) => {
             const review = body.review
-            expect(review).toBeInstanceOf(Object)
             expect(review).toEqual(expect.objectContaining({
                 owner: "philippaclaire9",
                 title: "Jenga",
@@ -275,7 +273,7 @@ describe("PATCH /api/reviews/:review_id", () => {
         })
     })
     test("404: ID doesn't exist", () => {
-        const reviewUpdate = { inc_votes: 1}
+        const reviewUpdate = { inc_votes: 1 }
         return request(app)
         .patch("/api/reviews/999999")
         .send(reviewUpdate)
@@ -304,4 +302,25 @@ describe("PATCH /api/reviews/:review_id", () => {
             expect(body.msg).toBe("Bad Request.")
         })
     })
+    test("400: Empty key", () => {
+        const reviewUpdate = {}
+        return request(app)
+        .patch("/api/reviews/2")
+        .send(reviewUpdate)
+        .expect(400)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Bad Request.")
+        })
+    })
+    test("400: Invalid", () => {
+        const reviewUpdate = { bob: "bob"}
+        return request(app)
+        .patch("/api/reviews/2")
+        .send(reviewUpdate)
+        .expect(400)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Bad Request.")
+        })
+    })
+
 })
