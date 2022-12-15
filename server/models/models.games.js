@@ -65,10 +65,26 @@ const insertCommentByReviewId = (id, comment) => {
     })
 }
 
+const updateReviewVotesById = (id, inc) => {
+    return db.query(`
+    UPDATE reviews
+    SET votes = votes + $1
+    WHERE review_id = $2
+    RETURNING *;
+    `, [inc, id])
+    .then((result) => {
+        if(result.rowCount === 0) {
+            return Promise.reject( {status: 404, msg: "Not Found."} )
+        }
+        return result.rows[0]
+    })
+}
+
 module.exports = { 
     selectCategories, 
     selectReviews, 
     selectReviewById, 
     selectCommentsByReviewId,
-    insertCommentByReviewId
+    insertCommentByReviewId,
+    updateReviewVotesById
 };

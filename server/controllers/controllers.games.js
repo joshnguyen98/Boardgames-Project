@@ -3,7 +3,8 @@ const {
     selectReviews, 
     selectReviewById, 
     selectCommentsByReviewId,
-    insertCommentByReviewId 
+    insertCommentByReviewId,
+    updateReviewVotesById
 } = require("../models/models.games");
 
 const getCategories = (req, res, next) => {
@@ -53,11 +54,9 @@ const getCommentsByReviewId = (req, res, next) => {
 const postCommentByReviewId = (req, res, next) => {
     const id = req.params.review_id
     const comment = req.body
-    const promises = [selectReviewById(id), insertCommentByReviewId(id, comment)]
     
-    Promise.all(promises)
-    .then((result) => {
-        const comment = result[1]
+    insertCommentByReviewId(id, comment)
+    .then((comment) => {
         res.status(201).send({ comment })
     })
     .catch((err) => {
@@ -65,10 +64,25 @@ const postCommentByReviewId = (req, res, next) => {
     })
 }
 
+const patchReviewVotesById = (req, res, next) => {
+    const id = req.params.review_id
+    const inc = req.body.inc_votes
+
+    updateReviewVotesById(id, inc)
+    .then((review) => {
+        res.status(200).send({ review })
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+
 module.exports = { 
     getCategories, 
     getReviews, 
     getReviewById, 
     getCommentsByReviewId, 
-    postCommentByReviewId 
+    postCommentByReviewId,
+    patchReviewVotesById
 };
