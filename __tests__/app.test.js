@@ -387,12 +387,12 @@ describe("GET /api/users (queries)", () => {
             })
         })
     })
-    test('400: bad category ', () => {
+    test('404: category not found ', () => {
         return request(app)
         .get('/api/reviews?category=office')
-        .expect(400)
+        .expect(404)
         .then(({ body }) => {
-            expect(body.msg).toBe("Bad Request.")
+            expect(body.msg).toBe("Not Found.")
         })
     })
     test("200: returns an empty array for a valid category with no reviews", () => {
