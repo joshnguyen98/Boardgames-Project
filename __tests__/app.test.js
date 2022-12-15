@@ -61,8 +61,7 @@ describe("GET /api/reviews/:review_id", () => {
         .expect(200)
         .then(( { body } ) => {
             const review = body.review
-            expect(review).toBeInstanceOf(Object)
-            expect(review).toEqual(expect.objectContaining({
+            expect(review).toMatchObject({
                 owner: "philippaclaire9",
                 title: "Jenga",
                 review_id: 2,
@@ -72,7 +71,7 @@ describe("GET /api/reviews/:review_id", () => {
                 created_at: "2021-01-18T10:01:41.251Z",
                 votes: 5,
                 designer: "Leslie Scott"
-            }))
+            })
         })
     })
     test("404: valid id but doesn't exist", () => {
@@ -401,6 +400,29 @@ describe("GET /api/users (queries)", () => {
         .expect(200)
         .then(({body: {reviews}}) => {
             expect(reviews).toMatchObject([])
+        })
+    })
+})
+
+describe("GET /api/review/:review_id (comment count)", () => {
+    test("200: returns a review object with specified review_id including comment count", () => {
+        return request(app)
+        .get("/api/reviews/2")
+        .expect(200)
+        .then(( { body } ) => {
+            const review = body.review
+            expect(review).toMatchObject({
+                owner: "philippaclaire9",
+                title: "Jenga",
+                review_id: 2,
+                category: "dexterity",
+                review_img_url: "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+                review_body: "Fiddly fun for all the family",
+                created_at: "2021-01-18T10:01:41.251Z",
+                votes: 5,
+                designer: "Leslie Scott",
+                comment_count: "3"
+            })
         })
     })
 })
