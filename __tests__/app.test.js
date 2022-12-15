@@ -343,3 +343,56 @@ describe("GET /api/users", () => {
         })
     })
 })
+
+describe("GET /api/users (queries)", () => {
+    test('200: accepts sort_by query; title', () => {
+        return request(app)
+        .get('/api/reviews?sort_by=title')
+        .expect(200)
+        .then(({body: {reviews}}) => {
+            expect(reviews).toBeSortedBy('title', { descending: true })
+        })
+    })
+    test('400: bad sort_by query', () => {
+        return request(app)
+        .get('/api/reviews?sort_by=hello')
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad Request.")
+        })
+    })
+    test('200: accepts order query; asc', () => {
+        return request(app)
+        .get('/api/reviews?order=asc')
+        .expect(200)
+        .then(({body: {reviews}}) => {
+            expect(reviews).toBeSortedBy('created_at')
+        })
+    })
+    test('400: bad sort_by ', () => {
+        return request(app)
+        .get('/api/reviews?order=hello')
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad Request.")
+        })
+    })
+    test('200: accepts category; dexterity', () => {
+        return request(app)
+        .get('/api/reviews?category=dexterity')
+        .expect(200)
+        .then(({body: {reviews}}) => {
+            reviews.forEach((review) => {
+                expect(review.category).toBe("dexterity")
+            })
+        })
+    })
+    test('400: bad category ', () => {
+        return request(app)
+        .get('/api/reviews?category=office')
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Bad Request.")
+        })
+    })
+})

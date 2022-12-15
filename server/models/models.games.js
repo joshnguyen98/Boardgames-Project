@@ -9,21 +9,46 @@ const selectCategories = () => {
     })
 };
 
-const selectReviews = () => {
-    return db.query(`
+const selectReviews = (category, sort_by='created_at', order='desc') => {
+    const validOrderQueries = ['asc', 'desc']
+    const validSortByQueries = ['title', 'designer', 'owner', 'review_img_url', 'category', 'created_at', 'votes', 'review_id']
+    const validCategoryQueries = ['euro game', 'social deduction', 'dexterity', "children's games"]
+
+    console.log(sort_by, "<<< sortby")
+    console.log(order, "<<< order")
+    console.log(category, "<<< cate")
+
+    if(!validSortByQueries.includes(sort_by) || !validOrderQueries.includes(order) ) {
+        return Promise.reject({status: 400, msg: 'Bad Request.'});
+    }
+
+    let queryStr = `
     SELECT 
-        title, designer, owner, review_img_url, category,reviews.created_at, reviews.votes, reviews.review_id, 
+        title, designer, owner, review_img_url, category, reviews.created_at, reviews.votes, reviews.review_id, 
     COUNT (comments.review_id) AS comment_count
     FROM 
         reviews
     LEFT JOIN 
         comments
-    ON reviews.review_id = comments.review_id
+    ON reviews.review_id = comments.review_id `
+
+    if (category !== undefined) {
+        if (!validCategoryQueries.includes(category)) {
+            return Promise.reject({status: 400, msg: 'Bad Request.'})
+        } else {
+            queryStr += ` WHERE category = '${category}' `
+        }
+    }
+
+    queryStr += `
     GROUP BY 
         title, designer, owner, review_img_url, category, reviews.created_at, reviews.votes, reviews.review_id
-    ORDER BY created_at DESC
-    ;`)
+    ORDER BY ${sort_by} ${order}
+    ;`
+
+    return db.query(queryStr)
     .then((result) => {
+        console.log(result.rows)
         return result.rows
     })
 };
@@ -89,6 +114,9 @@ const selectUsers = () => {
     })
 }
 
+
+
+
 module.exports = { 
     selectCategories, 
     selectReviews, 
@@ -96,5 +124,5 @@ module.exports = {
     selectCommentsByReviewId,
     insertCommentByReviewId,
     updateReviewVotesById,
-    selectUsers
+    selectUsers,
 };
