@@ -426,3 +426,27 @@ describe("GET /api/review/:review_id (comment count)", () => {
         })
     })
 })
+
+describe("DELETE /api/comments/:comment_id", () => {
+    test("deletes the comment with the given id and returns 204", () => {
+        return request(app)
+        .delete('/api/comments/2')
+        .expect(204)
+    })
+    test('status:400, returns bad request when id is not a number', () => {
+        return request(app)
+        .delete('/api/comments/abc')
+        .expect(400)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Bad Request.")
+        })
+    })
+    test('status:404, returns not found when comment id doesn\'t exist', () => {
+        return request(app)
+        .delete('/api/comments/999')
+        .expect(404)
+        .then(( { body } ) => {
+            expect(body.msg).toBe("Not Found.")
+        })
+    })
+})
