@@ -9,7 +9,7 @@ const {
     removeCommentById
 } = require("../models/models.games");
 
-const getCategories = (req, res, next) => {
+exports.getCategories = (req, res, next) => {
     selectCategories()
     .then((categories) => {
         res.status(200).send({ categories })
@@ -19,7 +19,7 @@ const getCategories = (req, res, next) => {
     })
 };
 
-const getReviews = (req, res, next) => {
+exports.getReviews = (req, res, next) => {
     const { category, sort_by, order } = req.query
     selectReviews(category, sort_by, order)
     .then((reviews) => {
@@ -30,7 +30,7 @@ const getReviews = (req, res, next) => {
     })
 }
 
-const getReviewById = (req, res, next) => {
+exports.getReviewById = (req, res, next) => {
     const id = req.params.review_id
     selectReviewById(id)
     .then((review) => {
@@ -41,7 +41,7 @@ const getReviewById = (req, res, next) => {
     })
 };
 
-const getCommentsByReviewId = (req, res, next) => {
+exports.getCommentsByReviewId = (req, res, next) => {
     const id = req.params.review_id
     const promises = [selectCommentsByReviewId(id), selectReviewById(id)]
 
@@ -54,7 +54,7 @@ const getCommentsByReviewId = (req, res, next) => {
     })
 }
 
-const postCommentByReviewId = (req, res, next) => {
+exports.postCommentByReviewId = (req, res, next) => {
     const id = req.params.review_id
     const comment = req.body
     
@@ -67,7 +67,7 @@ const postCommentByReviewId = (req, res, next) => {
     })
 }
 
-const patchReviewVotesById = (req, res, next) => {
+exports.patchReviewVotesById = (req, res, next) => {
     const id = req.params.review_id
     const inc = req.body.inc_votes
 
@@ -80,7 +80,7 @@ const patchReviewVotesById = (req, res, next) => {
     })
 }
 
-const getUsers = (req, res, next) => {
+exports.getUsers = (req, res, next) => {
     selectUsers()
     .then((users) => {
         res.status(200).send({ users })
@@ -90,24 +90,13 @@ const getUsers = (req, res, next) => {
     })
 }
 
-const deleteCommentById = (req, res, next) => {
+exports.deleteCommentById = (req, res, next) => {
     const id = req.params.comment_id
     removeCommentById(id)
     .then((comment) => {
-        res.status(204).send({ comment })
+        res.status(204).send()
     })
     .catch((err) => {
         next(err)
     })
 }
-
-module.exports = { 
-    getCategories, 
-    getReviews, 
-    getReviewById, 
-    getCommentsByReviewId, 
-    postCommentByReviewId,
-    patchReviewVotesById,
-    getUsers,
-    deleteCommentById
-};

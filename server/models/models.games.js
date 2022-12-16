@@ -1,6 +1,6 @@
 const db = require("../../db/connection");
 
-const selectCategories = () => {
+exports.selectCategories = () => {
     return db.query(`
     SELECT * FROM categories;
     `)
@@ -9,7 +9,7 @@ const selectCategories = () => {
     })
 };
 
-const selectReviews = (category, sort_by='created_at', order='desc') => {
+exports.selectReviews = (category, sort_by='created_at', order='desc') => {
     const validOrderQueries = ['asc', 'desc']
     const validSortByQueries = ['title', 'designer', 'owner', 'review_img_url', 'category', 'created_at', 'votes', 'review_id']
     const validCategoryQueries = ['euro game', 'social deduction', 'dexterity', "children's games"]
@@ -51,7 +51,7 @@ const selectReviews = (category, sort_by='created_at', order='desc') => {
     })
 };
 
-const selectReviewById = (id) => {
+exports.selectReviewById = (id) => {
     return db.query(`
     SELECT 
         title, designer, owner, review_img_url, category, review_body, reviews.created_at, reviews.votes, reviews.review_id, 
@@ -73,7 +73,7 @@ const selectReviewById = (id) => {
     })
 };
 
-const selectCommentsByReviewId = (id) => {
+exports.selectCommentsByReviewId = (id) => {
     return db.query(`
     SELECT * FROM comments
     WHERE review_id = $1
@@ -84,7 +84,7 @@ const selectCommentsByReviewId = (id) => {
     })
 ;}
 
-const insertCommentByReviewId = (id, comment) => {
+exports.insertCommentByReviewId = (id, comment) => {
     return db.query(`
     INSERT INTO comments
     (review_id, author, body)
@@ -97,7 +97,7 @@ const insertCommentByReviewId = (id, comment) => {
     })
 }
 
-const updateReviewVotesById = (id, inc) => {
+exports.updateReviewVotesById = (id, inc) => {
     return db.query(`
     UPDATE reviews
     SET votes = votes + $1
@@ -112,7 +112,7 @@ const updateReviewVotesById = (id, inc) => {
     })
 }
 
-const selectUsers = () => {
+exports.selectUsers = () => {
     return db.query(`
     SELECT * FROM users
     ;`)
@@ -121,7 +121,7 @@ const selectUsers = () => {
     })
 }
 
-const removeCommentById = (id) => {
+exports.removeCommentById = (id) => {
     return db.query(`
     DELETE FROM comments
     WHERE 
@@ -135,16 +135,3 @@ const removeCommentById = (id) => {
         return result.rows[0]
     })
 }
-
-
-
-module.exports = { 
-    selectCategories, 
-    selectReviews, 
-    selectReviewById, 
-    selectCommentsByReviewId,
-    insertCommentByReviewId,
-    updateReviewVotesById,
-    selectUsers,
-    removeCommentById
-};
