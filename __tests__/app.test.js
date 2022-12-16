@@ -343,7 +343,7 @@ describe("GET /api/users", () => {
     })
 })
 
-describe("GET /api/users (queries)", () => {
+describe("GET /api/reviews (queries)", () => {
     test('200: accepts sort_by query; title', () => {
         return request(app)
         .get('/api/reviews?sort_by=title')
@@ -449,4 +449,16 @@ describe("DELETE /api/comments/:comment_id", () => {
             expect(body.msg).toBe("Not Found.")
         })
     })
+})
+
+describe("GET /api", () => {
+    test("200: returns the endpoint json", () => {
+        return request(app)
+        .get("/api")
+        .expect(200)
+        .then(( { body } ) => {
+            console.log(body)
+            const endpoints = body
+        })
+    })    
 })

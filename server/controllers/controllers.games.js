@@ -6,8 +6,20 @@ const {
     insertCommentByReviewId,
     updateReviewVotesById,
     selectUsers,
-    removeCommentById
+    removeCommentById,
+    selectEndpoints
 } = require("../models/models.games");
+
+// exports.getEndpoints = (req, res, next) => {
+//     selectEndpoints()
+//     .then((endpoints) => {
+//         console.log(endpoints)
+//         res.status(200).send({ endpoints })
+//     })
+//     .catch((err) => {
+//         next(err)
+//     })
+// }
 
 exports.getCategories = (req, res, next) => {
     selectCategories()
@@ -93,7 +105,7 @@ exports.getUsers = (req, res, next) => {
 exports.deleteCommentById = (req, res, next) => {
     const id = req.params.comment_id
     removeCommentById(id)
-    .then((comment) => {
+    .then(() => {
         res.status(204).send()
     })
     .catch((err) => {

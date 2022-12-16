@@ -8,7 +8,8 @@ const {
     postCommentByReviewId, 
     patchReviewVotesById, 
     getUsers,
-    deleteCommentById
+    deleteCommentById,
+    getEndpoints
 } = require("./controllers/controllers.games");
 
 const app = express();
@@ -22,6 +23,7 @@ app.post("/api/reviews/:review_id/comments", postCommentByReviewId);
 app.patch("/api/reviews/:review_id", patchReviewVotesById);
 app.get("/api/users", getUsers)
 app.delete("/api/comments/:comment_id", deleteCommentById)
+// app.get("/api", getEndpoints)
 
 app.use(handleCustomErrors);
 app.use(handlePsqlErrors);

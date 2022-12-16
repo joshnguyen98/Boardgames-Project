@@ -1,4 +1,5 @@
 const db = require("../../db/connection");
+const fs = require("fs")
 
 exports.selectCategories = () => {
     return db.query(`
@@ -135,3 +136,16 @@ exports.removeCommentById = (id) => {
         return result.rows[0]
     })
 }
+
+// exports.selectEndpoints = () => {
+//     fs.readFile("endpoints.json", (err, data) => {
+//         if (err) {
+//             throw err
+//         } else {
+//             console.log(data)
+//             let endpoints = JSON.parse(data);
+//             console.log(endpoints)
+//         }
+//     })
+//     .then
+// }
