@@ -1,5 +1,5 @@
 const db = require("../../db/connection");
-const fs = require("fs")
+const fs = require("fs/promises")
 
 exports.selectCategories = () => {
     return db.query(`
@@ -137,15 +137,9 @@ exports.removeCommentById = (id) => {
     })
 }
 
-// exports.selectEndpoints = () => {
-//     fs.readFile("endpoints.json", (err, data) => {
-//         if (err) {
-//             throw err
-//         } else {
-//             console.log(data)
-//             let endpoints = JSON.parse(data);
-//             console.log(endpoints)
-//         }
-//     })
-//     .then
-// }
+exports.selectEndpoints = () => {
+    return fs.readFile(`endpoints.json`, "utf-8", (err, data) => {
+        console.log(data)
+        return data
+    })
+}

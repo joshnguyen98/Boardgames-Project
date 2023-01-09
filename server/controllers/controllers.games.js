@@ -10,16 +10,17 @@ const {
     selectEndpoints
 } = require("../models/models.games");
 
-// exports.getEndpoints = (req, res, next) => {
-//     selectEndpoints()
-//     .then((endpoints) => {
-//         console.log(endpoints)
-//         res.status(200).send({ endpoints })
-//     })
-//     .catch((err) => {
-//         next(err)
-//     })
-// }
+exports.getEndpoints = (req, res, next) => {
+    selectEndpoints()
+    .then((endpoints) => {
+        console.log(endpoints)
+        res.setHeader("Content-Type", "application/json")
+        res.status(200).send(endpoints)
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
 
 exports.getCategories = (req, res, next) => {
     selectCategories()
