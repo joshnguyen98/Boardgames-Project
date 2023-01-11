@@ -13,7 +13,7 @@ exports.selectCategories = () => {
 exports.selectReviews = (category, sort_by='created_at', order='desc') => {
     const validOrderQueries = ['asc', 'desc']
     const validSortByQueries = ['title', 'designer', 'owner', 'review_img_url', 'category', 'created_at', 'votes', 'review_id']
-    const validCategoryQueries = ['euro game', 'social deduction', 'dexterity', "children's games"]
+    const validCategoryQueries = ['euro game', 'social deduction', 'dexterity', "children's games", "strategy", "hidden-roles", "push-your-luck", "roll-and-write", "deck-building", "engine-building"]
 
     if(!validSortByQueries.includes(sort_by) || !validOrderQueries.includes(order) ) {
         return Promise.reject({status: 400, msg: 'Bad Request.'});
